@@ -270,38 +270,52 @@ input[type="date"].inp{font-family:var(--font);}
    IMPRESIÓN — layout fijo, siempre igual
 ═══════════════════════════════════════════════ */
 @media print{
-  @page{size:letter portrait;margin:6mm 8mm;}
+  @page{size:letter portrait;margin:12mm 14mm;}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
   body,html{background:#fff!important;}
   .np{display:none!important;}
   .hdr{display:none!important;}
   .main{padding:0!important;max-width:100%!important;margin:0!important;}
   .app{background:#fff!important;min-height:unset!important;}
-  .doc{box-shadow:none!important;border:none!important;border-radius:0!important;animation:none!important;page-break-inside:avoid;break-inside:avoid;}
-  .dochd{padding:5px 10px!important;}
-  .dochd h2{font-size:11px!important;}
-  .dochd p{font-size:8px!important;margin:2px 0 0!important;}
-  .docb{padding:4px 8px!important;overflow:visible!important;zoom:0.82;}
-  .dt{font-size:8px!important;margin-bottom:3px!important;}
-  .dt td,.dt th{padding:2px 4px!important;line-height:1.3!important;}
-  .dg2{gap:3px!important;margin-bottom:4px!important;}
-  .bxhd{padding:2px 6px!important;font-size:7.5px!important;}
-  .legal{padding:3px 6px!important;font-size:7px!important;margin-top:3px!important;line-height:1.5!important;}
-  .warn{padding:2px 5px!important;font-size:7px!important;margin-top:3px!important;line-height:1.4!important;}
-  .norms{padding:3px 6px!important;font-size:7px!important;margin-top:3px!important;line-height:1.5!important;}
-  .norms-t{font-size:7px!important;margin-bottom:2px!important;}
-  .sigs{margin-top:10px!important;padding-top:2px!important;}
-  .sig{width:140px!important;}
-  .sig-ln{font-size:8px!important;padding-top:4px!important;}
-  .sig-sub{font-size:7.5px!important;}
-  .row-tot td{font-size:9px!important;}
-  .row-yh td{font-size:8px!important;}
-  .yr-sep{font-size:8px!important;padding:2px 5px!important;margin-bottom:4px!important;}
-  .fm{font-size:7.5px!important;}
-  .dvb{font-size:8px!important;}
-  .dv{font-size:8px!important;}
-  .dl,.dl2{font-size:8px!important;}
-  .sec{font-size:8px!important;padding:3px 5px!important;}
+  .doc{box-shadow:none!important;border:none!important;border-radius:0!important;animation:none!important;}
+
+  /* Encabezado */
+  .dochd{padding:10px 16px!important;border-bottom-width:2px!important;}
+  .dochd h2{font-size:13px!important;letter-spacing:.4px!important;}
+  .dochd p{font-size:9px!important;margin:3px 0 0!important;}
+
+  /* Cuerpo */
+  .docb{padding:10px 14px!important;overflow:visible!important;}
+
+  /* Tablas */
+  .dt{font-size:9px!important;margin-bottom:5px!important;}
+  .dt td,.dt th{padding:3.5px 6px!important;line-height:1.35!important;}
+  .dl,.dl2{font-size:9px!important;}
+  .dv{font-size:9px!important;}
+  .dvb{font-size:9px!important;}
+  .fm{font-size:8.5px!important;}
+  .sec{font-size:8.5px!important;padding:4px 6px!important;letter-spacing:.4px!important;}
+  .row-tot td{font-size:10.5px!important;}
+  .row-yh td{font-size:8.5px!important;}
+
+  /* Grid 2 cols */
+  .dg2{gap:5px!important;margin-bottom:6px!important;}
+  .bxhd{padding:3px 8px!important;font-size:8px!important;}
+
+  /* Separador año */
+  .yr-sep{font-size:8.5px!important;padding:3px 7px!important;margin-bottom:5px!important;}
+
+  /* Texto legal */
+  .legal{padding:6px 8px!important;font-size:8px!important;margin-top:5px!important;line-height:1.6!important;}
+  .norms{padding:5px 8px!important;font-size:7.5px!important;margin-top:4px!important;line-height:1.6!important;}
+  .norms-t{font-size:7.5px!important;margin-bottom:2px!important;}
+  .warn{padding:4px 8px!important;font-size:7.5px!important;margin-top:4px!important;line-height:1.55!important;}
+
+  /* Firmas */
+  .sigs{margin-top:18px!important;padding-top:0!important;}
+  .sig{width:160px!important;}
+  .sig-ln{font-size:9px!important;padding-top:5px!important;}
+  .sig-sub{font-size:8px!important;margin-top:2px!important;}
 }
 
 /* ═══════════════════════════════════════════════
