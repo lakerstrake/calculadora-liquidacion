@@ -102,8 +102,6 @@ const NL = n => {
    ESTILOS
 ═══════════════════════════════════════════════ */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
 :root{
@@ -132,7 +130,7 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smo
 body{margin:0;padding:0;background:var(--bg);}
 
 /* ── APP ── */
-.app{min-height:100dvh;background:var(--bg);font-family:var(--font);color:var(--t1);font-size:14px;line-height:1.55;}
+.app{min-height:100vh;min-height:100dvh;background:var(--bg);font-family:var(--font);color:var(--t1);font-size:14px;line-height:1.55;}
 
 /* ── HEADER ── */
 .hdr{position:sticky;top:0;z-index:100;background:var(--hdr);border-bottom:1px solid rgba(255,255,255,.06);}
@@ -222,7 +220,7 @@ input[type="date"].inp{font-family:var(--font);}
 .dochd{background:var(--hdr);padding:16px 24px;border-bottom:3px solid var(--ac);text-align:center;}
 .dochd h2{color:#fff;font-size:13px;font-weight:700;letter-spacing:.5px;margin:0;text-transform:uppercase;}
 .dochd p{color:rgba(255,255,255,.4);font-size:9.5px;margin:4px 0 0;}
-.docb{padding:16px 20px;}
+.docb{padding:16px 20px;overflow-x:auto;}
 
 /* Tablas del documento */
 .dt{width:100%;border-collapse:collapse;margin-bottom:8px;font-size:11px;}
@@ -272,24 +270,38 @@ input[type="date"].inp{font-family:var(--font);}
    IMPRESIÓN — layout fijo, siempre igual
 ═══════════════════════════════════════════════ */
 @media print{
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-  body{background:#fff!important;}
+  @page{size:letter portrait;margin:6mm 8mm;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
+  body,html{background:#fff!important;}
   .np{display:none!important;}
   .hdr{display:none!important;}
-  .main{padding:0!important;max-width:100%!important;}
-  .doc{box-shadow:none!important;border:none!important;border-radius:0!important;animation:none!important;}
-  .dochd{padding:8px 14px!important;}
-  .dochd h2{font-size:12px!important;}
-  .docb{padding:5px 12px!important;}
-  .dt{font-size:9px!important;margin-bottom:4px!important;}
-  .dt td,.dt th{padding:2.5px 5px!important;}
-  .dg2{gap:4px!important;margin-bottom:5px!important;}
-  .legal,.warn,.norms{padding:4px 6px!important;font-size:7.5px!important;margin-top:4px!important;}
-  .sigs{margin-top:14px!important;}
-  .row-tot td{font-size:10px!important;}
-  .yr-sep{font-size:9px!important;padding:2px 6px!important;}
-  .fm{font-size:8.5px!important;}
-  @page{size:letter portrait;margin:8mm 10mm;}
+  .main{padding:0!important;max-width:100%!important;margin:0!important;}
+  .app{background:#fff!important;min-height:unset!important;}
+  .doc{box-shadow:none!important;border:none!important;border-radius:0!important;animation:none!important;page-break-inside:avoid;break-inside:avoid;}
+  .dochd{padding:5px 10px!important;}
+  .dochd h2{font-size:11px!important;}
+  .dochd p{font-size:8px!important;margin:2px 0 0!important;}
+  .docb{padding:4px 8px!important;overflow:visible!important;zoom:0.82;}
+  .dt{font-size:8px!important;margin-bottom:3px!important;}
+  .dt td,.dt th{padding:2px 4px!important;line-height:1.3!important;}
+  .dg2{gap:3px!important;margin-bottom:4px!important;}
+  .bxhd{padding:2px 6px!important;font-size:7.5px!important;}
+  .legal{padding:3px 6px!important;font-size:7px!important;margin-top:3px!important;line-height:1.5!important;}
+  .warn{padding:2px 5px!important;font-size:7px!important;margin-top:3px!important;line-height:1.4!important;}
+  .norms{padding:3px 6px!important;font-size:7px!important;margin-top:3px!important;line-height:1.5!important;}
+  .norms-t{font-size:7px!important;margin-bottom:2px!important;}
+  .sigs{margin-top:10px!important;padding-top:2px!important;}
+  .sig{width:140px!important;}
+  .sig-ln{font-size:8px!important;padding-top:4px!important;}
+  .sig-sub{font-size:7.5px!important;}
+  .row-tot td{font-size:9px!important;}
+  .row-yh td{font-size:8px!important;}
+  .yr-sep{font-size:8px!important;padding:2px 5px!important;margin-bottom:4px!important;}
+  .fm{font-size:7.5px!important;}
+  .dvb{font-size:8px!important;}
+  .dv{font-size:8px!important;}
+  .dl,.dl2{font-size:8px!important;}
+  .sec{font-size:8px!important;padding:3px 5px!important;}
 }
 
 /* ═══════════════════════════════════════════════
@@ -679,7 +691,8 @@ export default function App() {
                 })}
 
                 {/* 2. Resumen liquidación de pagos */}
-                <table className="dt">
+                <div className="tbl-scroll">
+                <table className="dt" style={{ minWidth: 500 }}>
                   <thead>
                     <tr><td colSpan="8" className="sec">Resumen liquidación de pagos</td></tr>
                     <tr>
@@ -739,6 +752,7 @@ export default function App() {
                     </tr>
                   </tbody>
                 </table>
+                </div>
 
                 {/* 3. Descuentos */}
                 <table className="dt">
