@@ -1,21 +1,25 @@
 import React, { useState, useMemo, useEffect } from "react";
 
-/* ═══ PARÁMETROS LEGALES ═══ */
+/* ═══════════════════════════════════════════════
+   PARÁMETROS LEGALES
+═══════════════════════════════════════════════ */
 const P = {
   2026: { smlmv: 1750905, aux: 249095 },
   2025: { smlmv: 1423500, aux: 200000 },
   2024: { smlmv: 1300000, aux: 162000 },
   2023: { smlmv: 1160000, aux: 140606 },
   2022: { smlmv: 1000000, aux: 117172 },
-  2021: { smlmv: 908526,  aux: 106454 },
-  2020: { smlmv: 877803,  aux: 102854 },
-  2019: { smlmv: 828116,  aux: 97032  },
-  2018: { smlmv: 781242,  aux: 88211  },
+  2021: { smlmv: 908526, aux: 106454 },
+  2020: { smlmv: 877803, aux: 102854 },
+  2019: { smlmv: 828116, aux: 97032 },
+  2018: { smlmv: 781242, aux: 88211 },
 };
 const gP = y => P[y] || P[2026];
 const TODAY = new Date().toISOString().split("T")[0];
 
-/* ═══ Formatters ═══ */
+/* ═══════════════════════════════════════════════
+   FORMATTERS
+═══════════════════════════════════════════════ */
 const n$ = v => "$ " + new Intl.NumberFormat("es-CO").format(Math.round(v));
 const nF = v => new Intl.NumberFormat("es-CO").format(Math.round(v));
 const pN = s => parseFloat((s || "0").replace(/[^\d]/g, "")) || 0;
@@ -32,7 +36,9 @@ const fDL = d => {
   });
 };
 
-/* ═══ Días comerciales 360 — CST ═══ */
+/* ═══════════════════════════════════════════════
+   CÁLCULO — Días comerciales 360 (CST)
+═══════════════════════════════════════════════ */
 const d360 = (a, b) => {
   let y1 = a.getFullYear(), m1 = a.getMonth(), d1 = a.getDate();
   let y2 = b.getFullYear(), m2 = b.getMonth(), d2 = b.getDate();
@@ -67,7 +73,9 @@ const calc = (s, e, sal, aux, bon) => {
   return { y, s, e, d, sal, aux, bon, base, ces, int, dp1, dp2, p1, p2, vac, sub: ces + int + p1 + p2 + vac };
 };
 
-/* Número a letras */
+/* ═══════════════════════════════════════════════
+   NÚMERO A LETRAS
+═══════════════════════════════════════════════ */
 const NL = n => {
   const a = Math.round(Math.abs(n)); if (!a) return "CERO PESOS";
   const u = ["", "UN", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"];
@@ -90,206 +98,229 @@ const NL = n => {
   return h(a) + " PESOS";
 };
 
-/* ─── CSS ─────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   ESTILOS
+═══════════════════════════════════════════════ */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
-:root {
-  --primary:   #0d1f3c;
-  --primary-h: #152e58;
-  --accent:    #2563eb;
-  --accent-lt: #eff6ff;
-  --gold:      #c8961e;
-  --gold-lt:   rgba(200,150,30,.12);
-  --bg:        #f0f3f8;
-  --surface:   #ffffff;
-  --border:    #dde3ed;
-  --text:      #1a2535;
-  --text-2:    #566379;
-  --text-3:    #9aa5b5;
-  --r:         10px;
-  --r-sm:      6px;
-  --font:      'IBM Plex Sans', system-ui, -apple-system, sans-serif;
-  --mono:      'IBM Plex Mono', 'Courier New', monospace;
+:root{
+  --bg:      #F0F2F5;
+  --surf:    #FFFFFF;
+  --bdr:     #E4E7ED;
+  --bdr2:    #CBD1DB;
+  --t1:      #0D1117;
+  --t2:      #5A6478;
+  --t3:      #9BA3B2;
+  --ac:      #2563EB;
+  --ac2:     #1D4ED8;
+  --ac-lt:   #EEF3FD;
+  --ac-mid:  #BFCFEF;
+  --hdr:     #141C2E;
+  --hdr2:    #1E2A42;
+  --r:       12px;
+  --rs:      7px;
+  --font:    'Inter',system-ui,-apple-system,sans-serif;
+  --mono:    'JetBrains Mono','Courier New',monospace;
+  --sh:      0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.05);
+  --sh2:     0 2px 8px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.07);
 }
 
-html { scroll-behavior: smooth; }
-body { margin: 0; padding: 0; background: var(--bg); }
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+body{margin:0;padding:0;background:var(--bg);}
 
-.lq { min-height: 100vh; background: var(--bg); font-family: var(--font); color: var(--text); font-size: 13.5px; line-height: 1.5; }
+/* ── APP ── */
+.app{min-height:100dvh;background:var(--bg);font-family:var(--font);color:var(--t1);font-size:14px;line-height:1.55;}
 
 /* ── HEADER ── */
-.lq-hdr { background: var(--primary); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 16px rgba(0,0,0,.22); border-bottom: 3px solid var(--gold); }
-.lq-hdr-in { max-width: 840px; margin: 0 auto; padding: 13px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.lq-brand { display: flex; align-items: center; gap: 12px; }
-.lq-icon { width: 38px; height: 38px; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.16); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.lq-title { font-size: 15.5px; font-weight: 700; color: #fff; line-height: 1.15; }
-.lq-sub { font-size: 10.5px; color: rgba(255,255,255,.5); margin-top: 1px; }
-.lq-badge { font-size: 10px; font-weight: 700; color: var(--gold); background: var(--gold-lt); border: 1px solid rgba(200,150,30,.35); border-radius: 4px; padding: 4px 10px; letter-spacing: .4px; white-space: nowrap; font-family: var(--mono); }
+.hdr{position:sticky;top:0;z-index:100;background:var(--hdr);border-bottom:1px solid rgba(255,255,255,.06);}
+.hdr-in{max-width:760px;margin:0 auto;padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.hdr-brand{display:flex;align-items:center;gap:12px;}
+.hdr-ico{width:32px;height:32px;background:var(--ac);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.hdr-name{font-size:14.5px;font-weight:600;color:#FFFFFF;letter-spacing:-.25px;}
+.hdr-leg{font-size:10px;color:rgba(255,255,255,.38);margin-top:1px;}
+.hdr-badge{font-size:10px;font-weight:500;font-family:var(--mono);color:rgba(255,255,255,.35);letter-spacing:.3px;white-space:nowrap;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:4px 9px;}
 
 /* ── MAIN ── */
-.lq-main { max-width: 840px; margin: 0 auto; padding: 22px 16px 52px; }
+.main{max-width:760px;margin:0 auto;padding:28px 16px 80px;}
 
 /* ── CARD ── */
-.lq-card { background: var(--surface); border-radius: var(--r); border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04); padding: 22px 24px; margin-bottom: 12px; }
-.lq-card-hd { font-size: 10px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: .9px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--primary); display: flex; align-items: center; gap: 9px; }
-.lq-num { font-family: var(--mono); font-size: 10px; background: var(--accent-lt); color: var(--accent); padding: 2px 7px; border-radius: 4px; font-weight: 600; }
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);box-shadow:var(--sh);padding:24px;margin-bottom:10px;}
+.card-hd{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--bdr);}
+.card-n{font-family:var(--mono);font-size:9.5px;font-weight:600;color:var(--ac);background:var(--ac-lt);padding:2px 7px;border-radius:4px;letter-spacing:.3px;flex-shrink:0;}
+.card-title{font-size:13.5px;font-weight:600;color:var(--t1);letter-spacing:-.2px;}
 
 /* ── FIELDS ── */
-.lq-f { margin-bottom: 14px; }
-.lq-f:last-child { margin-bottom: 0; }
-.lq-lbl { display: block; font-size: 10.5px; font-weight: 600; color: var(--text-2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px; }
-.lq-inp { width: 100%; padding: 9px 12px; background: #f7f9fc; border: 1.5px solid var(--border); border-radius: var(--r-sm); color: var(--text); font-size: 13.5px; font-family: var(--font); outline: none; transition: border-color .15s, box-shadow .15s, background .15s; -webkit-appearance: none; }
-.lq-inp:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,.10); background: #fff; }
-.lq-inp::placeholder { color: var(--text-3); }
+.f{margin-bottom:14px;}
+.f:last-child{margin-bottom:0;}
+.lbl{display:block;font-size:11px;font-weight:500;color:var(--t2);margin-bottom:6px;letter-spacing:-.1px;}
+.inp{width:100%;padding:10px 13px;background:#FAFBFC;border:1.5px solid var(--bdr);border-radius:var(--rs);color:var(--t1);font-size:14px;font-family:var(--font);outline:none;-webkit-appearance:none;appearance:none;transition:border-color .15s,box-shadow .15s,background .15s;min-height:44px;}
+.inp:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(37,99,235,.1);background:#fff;}
+.inp::placeholder{color:var(--t3);}
+input[type="date"].inp{font-family:var(--font);}
 
 /* ── GRIDS ── */
-.lq-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-.lq-r2  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.lq-r3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.ga{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;}
 
-/* ── TOGGLE ── */
-.lq-tog { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2px; }
-.lq-tb { padding: 7px 13px; border-radius: var(--r-sm); border: 1.5px solid var(--border); background: #f7f9fc; color: var(--text-2); font-size: 12px; font-weight: 500; font-family: var(--font); cursor: pointer; transition: all .14s; flex: 1; text-align: center; min-width: 80px; line-height: 1.3; }
-.lq-tb:hover { background: var(--accent-lt); border-color: #bfdbfe; color: var(--accent); }
-.lq-tb.on { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+/* ── TOGGLE — segmented ── */
+.tog{display:flex;background:#ECEEF2;border-radius:var(--rs);padding:3px;gap:2px;}
+.tb{flex:1;padding:8px 10px;background:transparent;border:none;border-radius:5px;color:var(--t2);font-size:12.5px;font-weight:500;font-family:var(--font);cursor:pointer;transition:all .15s;text-align:center;min-height:36px;line-height:1.2;}
+.tb:hover{color:var(--t1);}
+.tb.on{background:#fff;color:var(--ac);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.12);}
 
-/* ── CHIPS ── */
-.lq-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 4px; border: 1px solid #bfdbfe; background: var(--accent-lt); color: var(--accent); font-size: 10px; font-weight: 600; cursor: pointer; margin-top: 5px; font-family: var(--mono); transition: background .1s; }
-.lq-chip:hover { background: #dbeafe; }
-.lq-hint { font-size: 10.5px; color: var(--text-3); margin-top: 4px; }
-.lq-info { margin-top: 11px; padding: 10px 13px; background: var(--accent-lt); border-radius: var(--r-sm); border-left: 3px solid var(--accent); font-size: 12px; color: #1e40af; line-height: 1.55; }
+/* ── CAUSA ── */
+.seg{display:flex;flex-wrap:wrap;gap:6px;}
+.sb{padding:7px 15px;background:transparent;border:1.5px solid var(--bdr);border-radius:20px;color:var(--t2);font-size:12px;font-weight:500;font-family:var(--font);cursor:pointer;transition:all .15s;white-space:nowrap;min-height:36px;}
+.sb:hover{border-color:var(--ac-mid);color:var(--ac);}
+.sb.on{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600;}
+
+/* ── PILL ── */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;border-radius:20px;background:var(--ac-lt);border:1.5px solid var(--ac-mid);color:var(--ac);font-size:10.5px;font-weight:600;cursor:pointer;font-family:var(--mono);margin-top:7px;transition:all .12s;}
+.pill:hover{background:#dde8fd;border-color:var(--ac);}
+.hint{font-size:11px;color:var(--t3);margin-top:5px;line-height:1.4;}
+.info{margin-top:14px;padding:11px 14px;background:var(--ac-lt);border-radius:var(--rs);border:1.5px solid var(--ac-mid);font-size:12px;color:#1E40AF;line-height:1.6;}
 
 /* ── YEAR TABLE ── */
-.lq-ytbl { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 12px; }
-.lq-ytbl th { padding: 7px 8px; background: #f1f5fb; font-size: 9.5px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: .5px; border: 1px solid var(--border); text-align: center; }
-.lq-ytbl td { padding: 6px 8px; border: 1px solid var(--border); vertical-align: middle; }
-.lq-yl { font-weight: 700; color: var(--accent); font-family: var(--mono); font-size: 12.5px; background: var(--accent-lt); text-align: center; white-space: nowrap; }
-.lq-yd { font-family: var(--mono); text-align: center; color: var(--text-2); font-size: 11px; }
-.lq-yi { width: 100%; padding: 5px 8px; background: #fff; border: 1.5px solid var(--border); border-radius: 4px; font-size: 12px; font-family: var(--mono); color: var(--text); outline: none; text-align: right; transition: border-color .14s; }
-.lq-yi:focus { border-color: var(--accent); }
-.lq-yq { font-size: 9px; color: var(--accent); cursor: pointer; text-decoration: underline; display: block; text-align: right; margin-top: 2px; }
-.lq-ytot { font-family: var(--mono); text-align: right; font-weight: 700; color: var(--primary); font-size: 11.5px; background: #f8fafc; }
+.ytbl{width:100%;border-collapse:collapse;margin-top:16px;font-size:12px;}
+.ytbl th{padding:8px 9px;background:#F4F6FB;font-size:9px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border:1px solid var(--bdr);text-align:center;}
+.ytbl td{padding:6px 9px;border:1px solid var(--bdr);vertical-align:middle;}
+.yl{font-weight:700;color:var(--ac);font-family:var(--mono);font-size:12px;background:var(--ac-lt);text-align:center;white-space:nowrap;}
+.yd{font-family:var(--mono);text-align:center;color:var(--t2);font-size:11px;}
+.yi{width:100%;padding:5px 8px;background:#fff;border:1.5px solid var(--bdr);border-radius:4px;font-size:12px;font-family:var(--mono);color:var(--t1);outline:none;text-align:right;transition:border-color .14s;min-height:32px;}
+.yi:focus{border-color:var(--ac);}
+.yq{font-size:9px;color:var(--ac);cursor:pointer;display:block;text-align:right;margin-top:3px;opacity:.65;transition:opacity .1s;}
+.yq:hover{opacity:1;}
+.ytot{font-family:var(--mono);text-align:right;font-weight:700;color:var(--t1);font-size:11px;background:#F8FAFF;}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
 
 /* ── BUTTONS ── */
-.lq-btn-p { width: 100%; padding: 14px; background: var(--primary); color: #fff; border: none; border-radius: var(--r); font-size: 15px; font-weight: 700; font-family: var(--font); cursor: pointer; transition: background .14s, transform .1s; margin-top: 4px; letter-spacing: .2px; }
-.lq-btn-p:hover:not(:disabled) { background: var(--primary-h); }
-.lq-btn-p:active:not(:disabled) { transform: scale(.99); }
-.lq-btn-p:disabled { opacity: .32; cursor: not-allowed; }
-.lq-btn-s { padding: 9px 16px; background: #fff; color: var(--text-2); border: 1.5px solid var(--border); border-radius: var(--r-sm); font-size: 12.5px; font-weight: 600; font-family: var(--font); cursor: pointer; transition: all .14s; display: inline-flex; align-items: center; gap: 6px; }
-.lq-btn-s:hover { background: #f4f6fb; border-color: #bbc5d5; color: var(--text); }
-.lq-btn-s.on { background: var(--primary); color: #fff; border-color: var(--primary); }
-.lq-btn-back { width: 100%; padding: 11px; background: #fff; color: var(--text-2); border: 1.5px solid var(--border); border-radius: var(--r); font-size: 13.5px; font-weight: 600; font-family: var(--font); cursor: pointer; transition: all .14s; margin-top: 10px; }
-.lq-btn-back:hover { background: #f4f6fb; }
-.lq-bar { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+.btn-p{width:100%;padding:15px 20px;background:var(--ac);color:#fff;border:none;border-radius:var(--r);font-size:14.5px;font-weight:600;font-family:var(--font);cursor:pointer;transition:background .15s,transform .1s,box-shadow .15s;margin-top:4px;letter-spacing:-.1px;min-height:52px;box-shadow:0 2px 8px rgba(37,99,235,.35);}
+.btn-p:hover:not(:disabled){background:var(--ac2);box-shadow:0 4px 14px rgba(37,99,235,.45);}
+.btn-p:active:not(:disabled){transform:scale(.99);}
+.btn-p:disabled{opacity:.3;cursor:not-allowed;box-shadow:none;}
 
-/* ══════════════════════════════════════════
-   DOCUMENTO — Layout idéntico al formato físico
-   ══════════════════════════════════════════ */
-.lq-doc { background: #fff; border-radius: var(--r); border: 1px solid #c4cdd9; box-shadow: 0 4px 20px rgba(0,0,0,.10); overflow: hidden; animation: su .28s ease; }
-@keyframes su { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.btn-s{padding:9px 16px;background:#fff;color:var(--t2);border:1.5px solid var(--bdr);border-radius:var(--rs);font-size:13px;font-weight:500;font-family:var(--font);cursor:pointer;transition:all .14s;display:inline-flex;align-items:center;gap:7px;min-height:40px;}
+.btn-s:hover{background:#F5F7FC;border-color:var(--bdr2);color:var(--t1);}
 
-/* Encabezado del documento */
-.lq-dochd { background: var(--primary); padding: 14px 22px; border-bottom: 4px solid var(--gold); text-align: center; }
-.lq-dochd h2 { color: #fff; font-size: 14px; font-weight: 700; letter-spacing: .6px; margin: 0; text-transform: uppercase; }
-.lq-dochd p { color: rgba(255,255,255,.5); font-size: 9.5px; margin: 4px 0 0; }
-.lq-docb { padding: 14px 18px; }
+.btn-pr{padding:9px 20px;background:var(--hdr);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:500;font-family:var(--font);cursor:pointer;transition:background .14s;display:inline-flex;align-items:center;gap:7px;min-height:40px;}
+.btn-pr:hover{background:var(--hdr2);}
+
+.btn-b{width:100%;padding:12px;background:#fff;color:var(--t2);border:1.5px solid var(--bdr);border-radius:var(--r);font-size:13px;font-weight:500;font-family:var(--font);cursor:pointer;transition:all .14s;margin-top:10px;min-height:44px;}
+.btn-b:hover{background:#F5F7FC;color:var(--t1);}
+.abar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center;}
+
+/* ═══════════════════════════════════════════════
+   DOCUMENTO
+═══════════════════════════════════════════════ */
+.doc{background:#fff;border-radius:var(--r);border:1px solid var(--bdr2);box-shadow:var(--sh2);overflow:hidden;animation:su .24s ease;}
+@keyframes su{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.dochd{background:var(--hdr);padding:16px 24px;border-bottom:3px solid var(--ac);text-align:center;}
+.dochd h2{color:#fff;font-size:13px;font-weight:700;letter-spacing:.5px;margin:0;text-transform:uppercase;}
+.dochd p{color:rgba(255,255,255,.4);font-size:9.5px;margin:4px 0 0;}
+.docb{padding:16px 20px;}
 
 /* Tablas del documento */
-.dt { width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 11px; }
-.dt td { padding: 4px 7px; border: 1px solid #b8c4d4; vertical-align: middle; }
-.dt th { padding: 5px 7px; border: 1px solid #b8c4d4; background: #d5e0ef; font-weight: 700; color: var(--primary); font-size: 9px; text-transform: uppercase; letter-spacing: .4px; text-align: center; }
+.dt{width:100%;border-collapse:collapse;margin-bottom:8px;font-size:11px;}
+.dt td{padding:4px 7px;border:1px solid #D4DAE4;vertical-align:middle;}
+.dt th{padding:5px 7px;border:1px solid #D4DAE4;background:#DDE4F0;font-weight:700;color:#1E2A42;font-size:9px;text-transform:uppercase;letter-spacing:.4px;text-align:center;}
+.dl{background:#EBF0F9;font-weight:600;color:#1A2234;width:50%;}
+.dl2{background:#EBF0F9;font-weight:600;color:#1A2234;}
+.dv{font-family:var(--mono);text-align:right;color:#374151;font-size:10.5px;}
+.dvb{font-family:var(--mono);text-align:right;font-weight:700;color:#111827;font-size:10.5px;}
+.fw{font-weight:700;}
+.sec{background:var(--hdr);color:#fff!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.5px;font-size:9px!important;text-align:center;padding:5px 7px!important;}
+.row-tot td{background:var(--hdr);color:#fff;font-weight:700;font-size:12px;}
+.row-tot .dvb{color:#60A5FA;font-size:12px;}
+.row-sub td{background:#DCE7F7;font-weight:700;font-size:10.5px;}
+.row-yh td{background:#D4DFEE;font-weight:700;color:#1E2A42;font-size:10px;}
+.fm{font-family:var(--mono);text-align:center;font-size:10px;color:#4B5563;white-space:nowrap;}
+.op{text-align:center;color:var(--t3);font-size:9px;padding:4px 2px!important;}
 
-/* Tipos de celda */
-.dl  { background: #edf2f9; font-weight: 600; color: #1e293b; width: 50%; }
-.dl2 { background: #edf2f9; font-weight: 600; color: #1e293b; }
-.dv  { font-family: var(--mono); text-align: right; color: var(--text); font-size: 10.5px; }
-.dvb { font-family: var(--mono); text-align: right; font-weight: 700; color: var(--primary); font-size: 10.5px; }
-.fw  { font-weight: 700; }
-
-/* Sección título (cabecera oscura) */
-.sec { background: var(--primary); color: #fff !important; font-weight: 700 !important; text-transform: uppercase; letter-spacing: .5px; font-size: 9px !important; text-align: center; padding: 5px 7px !important; }
-
-/* Fila total devengos / resumen */
-.row-tot td { background: var(--primary); color: #fff; font-weight: 700; font-size: 12px; }
-.row-tot .dvb { color: #fbbf24; font-size: 12px; }
-.row-sub td  { background: #dce6f4; font-weight: 700; font-size: 10.5px; }
-.row-yh td   { background: #d0dcee; font-weight: 700; color: var(--primary); font-size: 10px; }
-
-/* Fórmulas */
-.fm  { font-family: var(--mono); text-align: center; font-size: 10px; color: #334155; white-space: nowrap; }
-.op  { text-align: center; color: var(--text-3); font-size: 9px; padding: 4px 2px !important; }
-
-/* Grid 2 columnas para las cajas */
-.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 8px; }
-.bx { border: 1px solid #b8c4d4; border-radius: 4px; overflow: hidden; }
-.bxhd { background: #d5e0ef; padding: 4px 8px; font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--primary); text-align: center; border-bottom: 1px solid #b8c4d4; }
-.bx .dt { margin: 0; }
-.bx .dt td { border-left: none; border-right: none; }
-.bx .dt tr:last-child td { border-bottom: none; }
-.bx .dl { width: 55%; }
-
-/* Separador de año */
-.yr-sep { background: var(--primary); color: #fbbf24; font-weight: 700; font-size: 10px; text-align: center; padding: 4px 8px; margin-bottom: 8px; border-radius: 4px; }
+/* Grid 2 col en documento */
+.dg2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
+.bx{border:1px solid #D4DAE4;border-radius:5px;overflow:hidden;}
+.bxhd{background:#DDE4F0;padding:4px 9px;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#1E2A42;text-align:center;border-bottom:1px solid #D4DAE4;}
+.bx .dt{margin:0;}
+.bx .dt td{border-left:none;border-right:none;}
+.bx .dt tr:last-child td{border-bottom:none;}
+.bx .dl{width:55%;}
+.yr-sep{background:var(--hdr);color:#93C5FD;font-weight:700;font-size:10px;text-align:center;padding:4px 8px;margin-bottom:8px;border-radius:5px;}
 
 /* Textos legales */
-.lq-legal { margin-top: 10px; padding: 9px 12px; background: #f7f9fc; border: 1px solid var(--border); font-size: 9.5px; color: var(--text-2); line-height: 1.65; border-radius: 4px; }
-.lq-legal strong { color: var(--text); }
-.lq-norms { margin-top: 7px; padding: 8px 10px; background: #f1f5f9; border: 1px solid var(--border); font-size: 8.5px; color: var(--text-2); line-height: 1.6; border-radius: 4px; }
-.lq-norms strong { color: var(--text); }
-.lq-norms-t { font-size: 8.5px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 3px; }
-.lq-warn { margin-top: 7px; padding: 7px 10px; background: #fefce8; border: 1px solid #fde68a; font-size: 8.5px; color: #78521a; line-height: 1.5; border-radius: 4px; }
+.legal{margin-top:10px;padding:10px 12px;background:#F8FAFC;border:1px solid var(--bdr);font-size:9.5px;color:#4B5563;line-height:1.7;border-radius:5px;}
+.legal strong{color:#111827;}
+.norms{margin-top:6px;padding:8px 10px;background:#F3F6FB;border:1px solid var(--bdr);font-size:8.5px;color:#5A6478;line-height:1.65;border-radius:5px;}
+.norms strong{color:#1E2A42;}
+.norms-t{font-size:8.5px;font-weight:700;color:#1E2A42;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px;}
+.warn{margin-top:6px;padding:7px 10px;background:#FFFBEB;border:1px solid #FDE68A;font-size:8.5px;color:#7C4F0F;line-height:1.55;border-radius:5px;}
 
 /* Firmas */
-.lq-sigs { display: flex; justify-content: space-around; margin-top: 28px; padding-top: 4px; }
-.lq-sig  { text-align: center; width: 180px; }
-.lq-sig-ln { border-top: 1.5px solid #334155; padding-top: 5px; font-size: 9.5px; color: var(--text-2); font-weight: 600; }
-.lq-sig-sub { font-size: 8.5px; color: var(--text-3); margin-top: 2px; }
+.sigs{display:flex;justify-content:space-around;margin-top:28px;padding-top:4px;}
+.sig{text-align:center;width:180px;}
+.sig-ln{border-top:1.5px solid #9CA3AF;padding-top:6px;font-size:9.5px;color:#4B5563;font-weight:600;}
+.sig-sub{font-size:8.5px;color:var(--t3);margin-top:2px;}
 
 /* Footer */
-.lq-footer { text-align: center; padding: 16px 0 0; font-size: 10px; color: var(--text-3); }
+.footer{text-align:center;padding:16px 0 0;font-size:10px;color:var(--t3);}
 
-/* ── IMPRESIÓN ── */
-@media print {
-  body { background: #fff !important; }
-  .np { display: none !important; }
-  .lq-hdr { display: none !important; }
-  .lq-main { padding: 0 !important; max-width: 100% !important; }
-  .lq-doc { box-shadow: none !important; border: none !important; border-radius: 0 !important; animation: none !important; }
-  .lq-docb { padding: 5px 10px !important; }
-  .dt { font-size: 9px !important; margin-bottom: 4px !important; }
-  .dt td, .dt th { padding: 2px 5px !important; }
-  .lq-dochd { padding: 7px 12px !important; }
-  .lq-dochd h2 { font-size: 11px !important; }
-  .g2 { gap: 4px !important; margin-bottom: 5px !important; }
-  .lq-legal, .lq-warn, .lq-norms { padding: 4px 6px !important; font-size: 7.5px !important; margin-top: 4px !important; }
-  .lq-sigs { margin-top: 14px !important; }
-  .row-tot td { font-size: 10px !important; }
-  .yr-sep { font-size: 9px !important; padding: 2px 6px !important; }
-  .fm { font-size: 8.5px !important; }
-  @page { size: letter portrait; margin: 8mm 10mm; }
+/* ═══════════════════════════════════════════════
+   IMPRESIÓN — layout fijo, siempre igual
+═══════════════════════════════════════════════ */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  body{background:#fff!important;}
+  .np{display:none!important;}
+  .hdr{display:none!important;}
+  .main{padding:0!important;max-width:100%!important;}
+  .doc{box-shadow:none!important;border:none!important;border-radius:0!important;animation:none!important;}
+  .dochd{padding:8px 14px!important;}
+  .dochd h2{font-size:12px!important;}
+  .docb{padding:5px 12px!important;}
+  .dt{font-size:9px!important;margin-bottom:4px!important;}
+  .dt td,.dt th{padding:2.5px 5px!important;}
+  .dg2{gap:4px!important;margin-bottom:5px!important;}
+  .legal,.warn,.norms{padding:4px 6px!important;font-size:7.5px!important;margin-top:4px!important;}
+  .sigs{margin-top:14px!important;}
+  .row-tot td{font-size:10px!important;}
+  .yr-sep{font-size:9px!important;padding:2px 6px!important;}
+  .fm{font-size:8.5px!important;}
+  @page{size:letter portrait;margin:8mm 10mm;}
 }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 680px) {
-  .lq-card { padding: 16px; }
-  .lq-r2, .lq-r3 { grid-template-columns: 1fr; }
-  .g2 { grid-template-columns: 1fr; }
-  .lq-sigs { flex-direction: column; align-items: center; gap: 20px; }
-  .lq-main { padding: 14px 10px 44px; }
-  .lq-ytbl { font-size: 11px; }
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media(max-width:640px){
+  .hdr-badge{display:none;}
+  .hdr-leg{display:none;}
+  .hdr-in{padding:0 16px;}
+  .card{padding:18px;}
+  .g2,.g3,.ga{grid-template-columns:1fr;}
+  .dg2{grid-template-columns:1fr;}
+  .sigs{flex-direction:column;align-items:center;gap:20px;}
+  .main{padding:16px 12px 60px;}
+  .ytbl{font-size:11px;}
+  .tb{font-size:12px;}
+  .btn-p{font-size:14px;}
 }
-@media (max-width: 420px) {
-  .lq-badge { display: none; }
-  .lq-tb { min-width: 60px; font-size: 11px; padding: 6px 8px; }
-  .lq-title { font-size: 14px; }
-  .lq-sub { display: none; }
+@media(max-width:400px){
+  .hdr-name{font-size:13.5px;}
+  .card{padding:16px;}
+  .sb{font-size:11.5px;padding:6px 11px;}
+}
+@media(min-width:641px) and (max-width:900px){
+  .main{padding:22px 24px 64px;}
 }
 `;
 
-/* ─── COMPONENTE PRINCIPAL ─── */
+/* ═══════════════════════════════════════════════
+   COMPONENTE PRINCIPAL
+═══════════════════════════════════════════════ */
 export default function App() {
   const [emp, setEmp] = useState("");
   const [nom, setNom] = useState("");
@@ -341,12 +372,12 @@ export default function App() {
     if (!yrs.length) return null;
     const ok = yrs.every(s => yd[s.y] && pN(yd[s.y].sal) > 0); if (!ok) return null;
     const rs = yrs.map(s => { const d = yd[s.y]; return calc(s.s, s.e, pN(d.sal), pN(d.aux), pN(bon)); });
-    const tD   = rs.reduce((a, r) => a + r.d, 0);
+    const tD = rs.reduce((a, r) => a + r.d, 0);
     const tCes = rs.reduce((a, r) => a + r.ces, 0);
     const tInt = rs.reduce((a, r) => a + r.int, 0);
-    const tP1  = rs.reduce((a, r) => a + r.p1, 0);
-    const tP2  = rs.reduce((a, r) => a + r.p2, 0);
-    const tVB  = rs.reduce((a, r) => a + r.vac, 0);
+    const tP1 = rs.reduce((a, r) => a + r.p1, 0);
+    const tP2 = rs.reduce((a, r) => a + r.p2, 0);
+    const tVB = rs.reduce((a, r) => a + r.vac, 0);
     const vTom = +(vt) || 0;
     const lastSal = rs[rs.length - 1].sal;
     const vDesc = (lastSal / 720) * vTom;
@@ -366,209 +397,221 @@ export default function App() {
   const CAUSAS = ["Terminación de contrato", "Renuncia voluntaria", "Despido sin justa causa", "Mutuo acuerdo"];
 
   return (
-    <div className="lq">
+    <div className="app">
       <style>{CSS}</style>
 
-      {/* ── HEADER ── */}
-      <header className="lq-hdr">
-        <div className="lq-hdr-in">
-          <div className="lq-brand">
-            <div className="lq-icon">⚖</div>
+      {/* ══ HEADER ══ */}
+      <header className="hdr">
+        <div className="hdr-in">
+          <div className="hdr-brand">
+            <div className="hdr-ico">⚖</div>
             <div>
-              <div className="lq-title">Liquidación Laboral</div>
-              <div className="lq-sub">Prestaciones sociales · Colombia · CST vigente</div>
+              <div className="hdr-name">Liquidación Laboral</div>
+              <div className="hdr-leg">Prestaciones sociales · Colombia · CST vigente</div>
             </div>
           </div>
-          <div className="lq-badge">🇨🇴 Normativa 2026</div>
+          <div className="hdr-badge">CO · 2026</div>
         </div>
       </header>
 
-      <main className="lq-main">
+      <main className="main">
         {!show ? (
-          /* ══════════════ FORMULARIO ══════════════ */
+          /* ══ FORMULARIO ══ */
           <>
             {/* 01 — Empleado */}
-            <div className="lq-card">
-              <div className="lq-card-hd"><span className="lq-num">01</span>Información del empleado</div>
-              <div className="lq-f">
-                <label className="lq-lbl">Empresa / Empleador</label>
-                <input className="lq-inp" placeholder="Razón social o nombre del empleador" value={emp} onChange={e => setEmp(e.target.value)} />
+            <div className="card">
+              <div className="card-hd"><span className="card-n">01 —</span><span className="card-title">Información del empleado</span></div>
+              <div className="f">
+                <label className="lbl">Empresa / Empleador</label>
+                <input className="inp" placeholder="Razón social o nombre del empleador" value={emp} onChange={e => setEmp(e.target.value)} />
               </div>
-              <div className="lq-row">
-                <div className="lq-f">
-                  <label className="lq-lbl">Nombre del empleado</label>
-                  <input className="lq-inp" placeholder="Nombre completo" value={nom} onChange={e => setNom(e.target.value)} />
+              <div className="ga">
+                <div className="f">
+                  <label className="lbl">Nombre del empleado</label>
+                  <input className="inp" placeholder="Nombre completo" value={nom} onChange={e => setNom(e.target.value)} />
                 </div>
-                <div className="lq-f">
-                  <label className="lq-lbl">Cédula / PPT</label>
-                  <input className="lq-inp" placeholder="Número de documento" value={ced} onChange={e => setCed(e.target.value)} inputMode="numeric" />
+                <div className="f">
+                  <label className="lbl">Cédula / PPT</label>
+                  <input className="inp" placeholder="Número de documento" value={ced} onChange={e => setCed(e.target.value)} inputMode="numeric" />
                 </div>
-                <div className="lq-f">
-                  <label className="lq-lbl">Cargo</label>
-                  <input className="lq-inp" placeholder="Cargo o posición" value={car} onChange={e => setCar(e.target.value)} />
+                <div className="f">
+                  <label className="lbl">Cargo</label>
+                  <input className="inp" placeholder="Cargo o posición" value={car} onChange={e => setCar(e.target.value)} />
                 </div>
               </div>
-              <div className="lq-f" style={{ marginBottom: 0 }}>
-                <label className="lq-lbl">Causa de la liquidación</label>
-                <div className="lq-tog">
+              <div className="f" style={{ marginBottom: 0 }}>
+                <label className="lbl">Causa de la liquidación</label>
+                <div className="seg">
                   {CAUSAS.map(c => (
-                    <button key={c} className={`lq-tb${cau === c ? " on" : ""}`} onClick={() => setCau(c)}>{c}</button>
+                    <button key={c} className={`sb${cau === c ? " on" : ""}`} onClick={() => setCau(c)}>{c}</button>
                   ))}
                 </div>
               </div>
             </div>
 
             {/* 02 — Periodo */}
-            <div className="lq-card">
-              <div className="lq-card-hd"><span className="lq-num">02</span>Período de liquidación</div>
-              <div className="lq-r2">
-                <div className="lq-f">
-                  <label className="lq-lbl">Fecha de inicio del contrato</label>
-                  <input type="date" className="lq-inp" value={fi} onChange={e => setFi(e.target.value)} />
+            <div className="card">
+              <div className="card-hd"><span className="card-n">02 —</span><span className="card-title">Período de liquidación</span></div>
+              <div className="g2">
+                <div className="f">
+                  <label className="lbl">Fecha de inicio del contrato</label>
+                  <input type="date" className="inp" value={fi} onChange={e => setFi(e.target.value)} />
                 </div>
-                <div className="lq-f">
-                  <label className="lq-lbl">Fecha de terminación</label>
-                  <input type="date" className="lq-inp" value={fr} onChange={e => setFr(e.target.value)} />
-                  <button className="lq-chip" onClick={() => setFr(TODAY)}>📅 Usar fecha de hoy</button>
+                <div className="f">
+                  <label className="lbl">Fecha de terminación</label>
+                  <input type="date" className="inp" value={fr} onChange={e => setFr(e.target.value)} />
+                  <button className="pill" onClick={() => setFr(TODAY)}>Usar fecha de hoy</button>
                 </div>
               </div>
               {yrs.length > 1 && (
-                <div className="lq-info">
-                  📊 <strong>Contrato de {yrs.length} años</strong> ({yrs.map(s => s.y).join(", ")}). Se liquidará cada año de forma independiente con sus parámetros legales vigentes.
+                <div className="info">
+                  <strong>Contrato de {yrs.length} años</strong> ({yrs.map(s => s.y).join(", ")}). Se liquidará cada año de forma independiente con sus parámetros legales vigentes.
                 </div>
               )}
             </div>
 
             {/* 03 — Salario */}
-            <div className="lq-card">
-              <div className="lq-card-hd"><span className="lq-num">03</span>Salario y auxilio de transporte</div>
-              <div className="lq-r2">
-                <div className="lq-f">
-                  <label className="lq-lbl">¿El salario fue igual todos los años?</label>
-                  <div className="lq-tog">
-                    <button className={`lq-tb${sameSal ? " on" : ""}`} onClick={() => setSameSal(true)}>Sí, el mismo</button>
-                    <button className={`lq-tb${!sameSal ? " on" : ""}`} onClick={() => setSameSal(false)}>No, cambió</button>
+            <div className="card">
+              <div className="card-hd"><span className="card-n">03 —</span><span className="card-title">Salario y auxilio de transporte</span></div>
+              <div className="g2">
+                <div className="f">
+                  <label className="lbl">¿El salario fue igual todos los años?</label>
+                  <div className="tog">
+                    <button className={`tb${sameSal ? " on" : ""}`} onClick={() => setSameSal(true)}>Sí, el mismo</button>
+                    <button className={`tb${!sameSal ? " on" : ""}`} onClick={() => setSameSal(false)}>No, cambió</button>
                   </div>
                 </div>
-                <div className="lq-f">
-                  <label className="lq-lbl">¿Recibe auxilio de transporte?</label>
-                  <div className="lq-tog" style={{ maxWidth: 180 }}>
-                    <button className={`lq-tb${hasAux ? " on" : ""}`} onClick={() => setHasAux(true)}>Sí</button>
-                    <button className={`lq-tb${!hasAux ? " on" : ""}`} onClick={() => setHasAux(false)}>No</button>
+                <div className="f">
+                  <label className="lbl">¿Recibe auxilio de transporte?</label>
+                  <div className="tog" style={{ maxWidth: 180 }}>
+                    <button className={`tb${hasAux ? " on" : ""}`} onClick={() => setHasAux(true)}>Sí</button>
+                    <button className={`tb${!hasAux ? " on" : ""}`} onClick={() => setHasAux(false)}>No</button>
                   </div>
-                  <div className="lq-hint">Aplica si salario ≤ 2 SMLMV · Ley 15/1959</div>
+                  <div className="hint">Aplica si salario ≤ 2 SMLMV · Ley 15/1959</div>
                 </div>
               </div>
               {sameSal && (
-                <div className="lq-f">
-                  <label className="lq-lbl">Salario mensual</label>
-                  <input type="text" className="lq-inp" placeholder="Ingrese el salario mensual" value={gSal}
+                <div className="f">
+                  <label className="lbl">Salario mensual</label>
+                  <input type="text" className="inp" placeholder="Ingrese el salario mensual" value={gSal}
                     onChange={fI(setGSal)} inputMode="numeric" style={{ maxWidth: 280 }} />
-                  <button className="lq-chip" onClick={() => setGSal(nF(gP(2026).smlmv))}>
-                    SMLMV 2026: ${nF(gP(2026).smlmv)}
+                  <button className="pill" onClick={() => setGSal(nF(gP(2026).smlmv))}>
+                    SMLMV 2026 · ${nF(gP(2026).smlmv)}
                   </button>
                 </div>
               )}
-              <div className="lq-f">
-                <label className="lq-lbl">Promedio bonificaciones mensuales</label>
-                <input type="text" className="lq-inp" placeholder="$0 — si no aplica, deje en blanco" value={bon}
+              <div className="f">
+                <label className="lbl">Promedio bonificaciones mensuales</label>
+                <input type="text" className="inp" placeholder="$ 0 — si no aplica, deje en blanco" value={bon}
                   onChange={fI(setBon)} inputMode="numeric" style={{ maxWidth: 280 }} />
               </div>
               {yrs.length > 0 && (
-                <table className="lq-ytbl">
-                  <thead>
-                    <tr><th>Año</th><th>Días</th><th>Salario mensual</th><th>Aux. transporte</th><th>Base total</th></tr>
-                  </thead>
-                  <tbody>
-                    {yrs.map(s => {
-                      const y = s.y, d = yd[y] || { sal: "", aux: "0" }, p = gP(y);
-                      const sl = pN(d.sal), ax = pN(d.aux), dd = dias(s.s, s.e);
-                      return (
-                        <tr key={y}>
-                          <td className="lq-yl">{y}</td>
-                          <td className="lq-yd">{dd}</td>
-                          <td>
-                            <input className="lq-yi" value={d.sal} inputMode="numeric" placeholder="Salario"
-                              onChange={e => { const r = e.target.value.replace(/[^\d]/g, ""); uY(y, "sal", r ? nF(+r) : ""); if (sameSal) setGSal(r ? nF(+r) : ""); }} />
-                            <span className="lq-yq" onClick={() => { uY(y, "sal", nF(p.smlmv)); if (sameSal) setGSal(nF(p.smlmv)); }}>
-                              SMLMV {y}: ${nF(p.smlmv)}
-                            </span>
-                          </td>
-                          <td>
-                            <input className="lq-yi" value={d.aux} inputMode="numeric"
-                              onChange={e => { const r = e.target.value.replace(/[^\d]/g, ""); uY(y, "aux", r ? nF(+r) : ""); }} />
-                            <span className="lq-yq" onClick={() => uY(y, "aux", nF(p.aux))}>Legal {y}: ${nF(p.aux)}</span>
-                          </td>
-                          <td className="lq-ytot">{n$(sl + ax + pN(bon))}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                <div className="tbl-scroll">
+                  <table className="ytbl">
+                    <thead>
+                      <tr><th>Año</th><th>Días</th><th>Salario mensual</th><th>Aux. transporte</th><th>Base total</th></tr>
+                    </thead>
+                    <tbody>
+                      {yrs.map(s => {
+                        const y = s.y, d = yd[y] || { sal: "", aux: "0" }, p = gP(y);
+                        const sl = pN(d.sal), ax = pN(d.aux), dd = dias(s.s, s.e);
+                        return (
+                          <tr key={y}>
+                            <td className="yl">{y}</td>
+                            <td className="yd">{dd}</td>
+                            <td>
+                              <input className="yi" value={d.sal} inputMode="numeric" placeholder="Salario"
+                                onChange={e => { const r = e.target.value.replace(/[^\d]/g, ""); uY(y, "sal", r ? nF(+r) : ""); if (sameSal) setGSal(r ? nF(+r) : ""); }} />
+                              <span className="yq" onClick={() => { uY(y, "sal", nF(p.smlmv)); if (sameSal) setGSal(nF(p.smlmv)); }}>
+                                SMLMV {y} · ${nF(p.smlmv)}
+                              </span>
+                            </td>
+                            <td>
+                              <input className="yi" value={d.aux} inputMode="numeric"
+                                onChange={e => { const r = e.target.value.replace(/[^\d]/g, ""); uY(y, "aux", r ? nF(+r) : ""); }} />
+                              <span className="yq" onClick={() => uY(y, "aux", nF(p.aux))}>Legal {y} · ${nF(p.aux)}</span>
+                            </td>
+                            <td className="ytot">{n$(sl + ax + pN(bon))}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
 
-            {/* 04 — Descuentos */}
-            <div className="lq-card">
-              <div className="lq-card-hd"><span className="lq-num">04</span>Vacaciones y descuentos previos</div>
-              <div className="lq-f">
-                <label className="lq-lbl">Días de vacaciones ya tomados</label>
-                <input type="number" className="lq-inp" value={vt} onChange={e => setVt(e.target.value)} min="0" style={{ maxWidth: 140 }} />
+            {/* 04 — Vacaciones y descuentos */}
+            <div className="card">
+              <div className="card-hd"><span className="card-n">04 —</span><span className="card-title">Vacaciones y descuentos previos</span></div>
+              <div className="f">
+                <label className="lbl">Días de vacaciones ya tomados</label>
+                <input type="number" className="inp" value={vt} onChange={e => setVt(e.target.value)} min="0" style={{ maxWidth: 140 }} />
               </div>
-              <div className="lq-r3">
-                <div className="lq-f">
-                  <label className="lq-lbl">Cesantías ya consignadas</label>
-                  <input type="text" className="lq-inp" placeholder="$0" value={dCes} onChange={fI(setDCes)} inputMode="numeric" />
+              <div className="g3">
+                <div className="f">
+                  <label className="lbl">Cesantías ya consignadas</label>
+                  <input type="text" className="inp" placeholder="$ 0" value={dCes} onChange={fI(setDCes)} inputMode="numeric" />
                 </div>
-                <div className="lq-f">
-                  <label className="lq-lbl">Prima ya pagada</label>
-                  <input type="text" className="lq-inp" placeholder="$0" value={dPri} onChange={fI(setDPri)} inputMode="numeric" />
+                <div className="f">
+                  <label className="lbl">Prima ya pagada</label>
+                  <input type="text" className="inp" placeholder="$ 0" value={dPri} onChange={fI(setDPri)} inputMode="numeric" />
                 </div>
-                <div className="lq-f">
-                  <label className="lq-lbl">Int. cesantías pagados</label>
-                  <input type="text" className="lq-inp" placeholder="$0" value={dInt} onChange={fI(setDInt)} inputMode="numeric" />
+                <div className="f">
+                  <label className="lbl">Int. cesantías pagados</label>
+                  <input type="text" className="inp" placeholder="$ 0" value={dInt} onChange={fI(setDInt)} inputMode="numeric" />
                 </div>
               </div>
             </div>
 
-            <button className="lq-btn-p" disabled={!ok} onClick={() => ok && setShow(true)}>
+            <button className="btn-p" disabled={!ok} onClick={() => ok && setShow(true)}>
               {ok ? "Generar liquidación →" : "Complete los campos requeridos"}
             </button>
           </>
+
         ) : R ? (
-          /* ══════════════ DOCUMENTO ══════════════ */
+          /* ══ DOCUMENTO ══ */
           <div>
-            {/* Barra de acciones */}
-            <div className="lq-bar np">
-              <button className="lq-btn-s" onClick={() => setShow(false)}>← Editar datos</button>
-              <button className="lq-btn-s" onClick={() => window.print()}>🖨 Imprimir / PDF</button>
+            <div className="abar np">
+              <button className="btn-s" onClick={() => setShow(false)}>← Editar datos</button>
+              <button className="btn-pr" onClick={() => window.print()}>Imprimir / PDF</button>
             </div>
 
-            <div className="lq-doc">
-              {/* ── Encabezado ── */}
-              <div className="lq-dochd">
+            <div className="doc">
+              {/* Encabezado */}
+              <div className="dochd">
                 <h2>{emp || "Liquidación de Contrato de Trabajo"}</h2>
                 <p>Liquidación definitiva de prestaciones sociales · Sector privado · Colombia</p>
               </div>
 
-              <div className="lq-docb">
+              <div className="docb">
 
-                {/* ── 1. Datos del empleado ── */}
+                {/* 1. Datos del empleado */}
                 <table className="dt"><tbody>
-                  <tr><td className="dl2" style={{ width: "28%" }}>Nombre del empleado</td><td style={{ fontWeight: 600 }}>{nom || "—"}</td><td className="dl2" style={{ width: "18%" }}>PPT / Cédula</td><td className="dv">{ced || "—"}</td></tr>
-                  <tr><td className="dl2">Cargo</td><td>{car || "—"}</td><td className="dl2">Causa de la liquidación</td><td>{cau}</td></tr>
+                  <tr>
+                    <td className="dl2" style={{ width: "28%" }}>Nombre del empleado</td>
+                    <td style={{ fontWeight: 600 }}>{nom || "—"}</td>
+                    <td className="dl2" style={{ width: "18%" }}>PPT / Cédula</td>
+                    <td className="dv">{ced || "—"}</td>
+                  </tr>
+                  <tr>
+                    <td className="dl2">Cargo</td>
+                    <td>{car || "—"}</td>
+                    <td className="dl2">Causa de la liquidación</td>
+                    <td>{cau}</td>
+                  </tr>
                 </tbody></table>
 
-                {/* ── Por segmento de año ── */}
+                {/* Por segmento de año */}
                 {R.rs.map((r, i) => {
                   const isLast = i === R.rs.length - 1;
                   const vacPend = isLast ? Math.max(0, r.d - R.vTom) : r.d;
                   return (
                     <div key={r.y}>
-                      {R.multi && <div className="yr-sep">📅 Año {r.y} — {r.d} días laborados</div>}
+                      {R.multi && <div className="yr-sep">Año {r.y} — {r.d} días laborados</div>}
 
-                      {/* Periodo + Salario base */}
-                      <div className="g2">
+                      {/* Período + Salario base */}
+                      <div className="dg2">
                         <div className="bx">
                           <div className="bxhd">Período de liquidación</div>
                           <table className="dt"><tbody>
@@ -589,7 +632,7 @@ export default function App() {
                       </div>
 
                       {/* Prima + Cesantías */}
-                      <div className="g2">
+                      <div className="dg2">
                         <div className="bx">
                           <div className="bxhd">Prima de servicios</div>
                           <table className="dt"><tbody>
@@ -611,7 +654,7 @@ export default function App() {
                       </div>
 
                       {/* Vacaciones + Intereses */}
-                      <div className="g2">
+                      <div className="dg2">
                         <div className="bx">
                           <div className="bxhd">Vacaciones</div>
                           <table className="dt"><tbody>
@@ -635,7 +678,7 @@ export default function App() {
                   );
                 })}
 
-                {/* ── 2. Resumen liquidación de pagos ── */}
+                {/* 2. Resumen liquidación de pagos */}
                 <table className="dt">
                   <thead>
                     <tr><td colSpan="8" className="sec">Resumen liquidación de pagos</td></tr>
@@ -649,100 +692,106 @@ export default function App() {
                       <React.Fragment key={r.y}>
                         {R.multi && <tr className="row-yh"><td colSpan="8">Año {r.y} — {r.d} días — Base: {n$(r.base)}</td></tr>}
                         <tr>
-                          <td className="dl2">Vacaciones pendientes {R.multi ? r.y : ""}</td>
+                          <td className="dl2">Vacaciones pendientes{R.multi ? ` ${r.y}` : ""}</td>
                           <td className="fm">{nF(r.sal)}</td><td className="op">/</td><td className="fm">720</td>
                           <td className="op">×</td><td className="fm">{r.d}</td><td className="op">=</td>
                           <td className="dvb">{n$(r.vac)}</td>
                         </tr>
                         <tr>
-                          <td className="dl2">Cesantías {R.multi ? r.y : ""}</td>
+                          <td className="dl2">Cesantías{R.multi ? ` ${r.y}` : ""}</td>
                           <td className="fm">{nF(r.base)}</td><td className="op">/</td><td className="fm">360</td>
                           <td className="op">×</td><td className="fm">{r.d}</td><td className="op">=</td>
                           <td className="dvb">{n$(r.ces)}</td>
                         </tr>
                         <tr>
-                          <td className="dl2">Intereses de cesantías {R.multi ? r.y : ""}</td>
+                          <td className="dl2">Intereses de cesantías{R.multi ? ` ${r.y}` : ""}</td>
                           <td className="fm">{nF(Math.round(r.ces))}</td><td className="op">/</td><td className="fm">360</td>
                           <td className="op">×</td><td className="fm">{r.d} × 12%</td><td className="op">=</td>
                           <td className="dvb">{n$(r.int)}</td>
                         </tr>
-                        {r.dp1 > 0 && <tr>
-                          <td className="dl2">Prima servicios 1er sem. {R.multi ? r.y : ""}</td>
-                          <td className="fm">{nF(r.base)}</td><td className="op">/</td><td className="fm">360</td>
-                          <td className="op">×</td><td className="fm">{r.dp1}</td><td className="op">=</td>
-                          <td className="dvb">{n$(r.p1)}</td>
-                        </tr>}
-                        {r.dp2 > 0 && <tr>
-                          <td className="dl2">Prima servicios 2do sem. {R.multi ? r.y : ""}</td>
-                          <td className="fm">{nF(r.base)}</td><td className="op">/</td><td className="fm">360</td>
-                          <td className="op">×</td><td className="fm">{r.dp2}</td><td className="op">=</td>
-                          <td className="dvb">{n$(r.p2)}</td>
-                        </tr>}
-                        {R.multi && <tr className="row-sub">
-                          <td colSpan="7" style={{ textAlign: "right", paddingRight: 8 }}>Subtotal {r.y}</td>
-                          <td className="dvb">{n$(r.sub)}</td>
-                        </tr>}
+                        {r.dp1 > 0 && (
+                          <tr>
+                            <td className="dl2">Prima servicios 1er sem.{R.multi ? ` ${r.y}` : ""}</td>
+                            <td className="fm">{nF(r.base)}</td><td className="op">/</td><td className="fm">360</td>
+                            <td className="op">×</td><td className="fm">{r.dp1}</td><td className="op">=</td>
+                            <td className="dvb">{n$(r.p1)}</td>
+                          </tr>
+                        )}
+                        {r.dp2 > 0 && (
+                          <tr>
+                            <td className="dl2">Prima servicios 2do sem.{R.multi ? ` ${r.y}` : ""}</td>
+                            <td className="fm">{nF(r.base)}</td><td className="op">/</td><td className="fm">360</td>
+                            <td className="op">×</td><td className="fm">{r.dp2}</td><td className="op">=</td>
+                            <td className="dvb">{n$(r.p2)}</td>
+                          </tr>
+                        )}
+                        {R.multi && (
+                          <tr className="row-sub">
+                            <td colSpan="7" style={{ textAlign: "right", paddingRight: 8 }}>Subtotal {r.y}</td>
+                            <td className="dvb">{n$(r.sub)}</td>
+                          </tr>
+                        )}
                       </React.Fragment>
                     ))}
-                    <tr style={{ background: "#dce6f4", fontWeight: 700 }}>
+                    <tr style={{ background: "#D4E2F4", fontWeight: 700 }}>
                       <td colSpan="7" style={{ textAlign: "right", paddingRight: 8 }}>TOTAL DEVENGOS</td>
                       <td className="dvb">{n$(R.tDev)}</td>
                     </tr>
                   </tbody>
                 </table>
 
-                {/* ── 3. Descuentos ── */}
+                {/* 3. Descuentos */}
                 <table className="dt">
                   <thead><tr><td colSpan="2" className="sec">Resumen descuentos liquidación</td></tr></thead>
                   <tbody>
                     <tr><td className="dl2">Cesantías consignadas</td><td className="dv">{n$(R.dc)}</td></tr>
                     <tr><td className="dl2">Prima pagada</td><td className="dv">{n$(R.dp)}</td></tr>
                     <tr><td className="dl2">Intereses de cesantías pagados</td><td className="dv">{n$(R.di)}</td></tr>
-                    <tr style={{ background: "#dce6f4", fontWeight: 700 }}>
+                    <tr style={{ background: "#D4E2F4", fontWeight: 700 }}>
                       <td style={{ textAlign: "right", paddingRight: 8 }}>TOTAL DEDUCCIONES</td>
                       <td className="dvb">{n$(R.tDesc)}</td>
                     </tr>
                   </tbody>
                 </table>
 
-                {/* ── 4. Valor final ── */}
+                {/* 4. Valor final */}
                 <table className="dt"><tbody>
                   <tr className="row-tot">
                     <td style={{ textAlign: "right", paddingRight: 10, fontWeight: 700 }}>VALOR LIQUIDACIÓN</td>
                     <td className="dvb" style={{ width: "30%" }}>{n$(R.val)}</td>
                   </tr>
                   <tr>
-                    <td colSpan="2" style={{ fontSize: 9.5, color: "#4a5568", fontStyle: "italic", padding: "5px 8px" }}>
+                    <td colSpan="2" style={{ fontSize: 9.5, color: "#4A5568", fontStyle: "italic", padding: "5px 8px" }}>
                       SON: ({NL(R.val)})
                     </td>
                   </tr>
                 </tbody></table>
 
-                {/* ── 5. Se hace constar ── */}
-                <div className="lq-legal">
+                {/* 5. Se hace constar */}
+                <div className="legal">
                   <strong>SE HACE CONSTAR:</strong><br /><br />
                   1. Que el patrono ha incorporado en la presente liquidación los importes correspondientes a salarios, horas extras, descansos compensatorios, cesantías, vacaciones, prima de servicios, auxilio de transporte, y en sí, todo concepto relacionado con salarios, prestaciones o indemnizaciones causadas al quedar extinguido el contrato de trabajo.<br /><br />
                   2. Que con el pago del dinero anotado en la presente liquidación, queda transada cualquier diferencia relativa al contrato de trabajo extinguido, o a cualquier diferencia anterior. Por lo tanto, esta transacción tiene como efecto la terminación de las obligaciones provenientes de la relación laboral que existió entre <strong>{emp || "el empleador"}</strong> y el trabajador, quienes declaran estar a paz y salvo por todo concepto.
                 </div>
 
-                {/* ── 6. Firmas ── */}
-                <div className="lq-sigs">
-                  <div className="lq-sig">
+                {/* 6. Firmas */}
+                <div className="sigs">
+                  <div className="sig">
                     <div style={{ height: 34 }}></div>
-                    <div className="lq-sig-ln">Firma del trabajador</div>
-                    {nom && <div className="lq-sig-sub">{nom}</div>}
-                    {ced && <div className="lq-sig-sub">C.C. {ced}</div>}
+                    <div className="sig-ln">Firma del trabajador</div>
+                    {nom && <div className="sig-sub">{nom}</div>}
+                    {ced && <div className="sig-sub">C.C. {ced}</div>}
                   </div>
-                  <div className="lq-sig">
+                  <div className="sig">
                     <div style={{ height: 34 }}></div>
-                    <div className="lq-sig-ln">Firma del empleador</div>
-                    {emp && <div className="lq-sig-sub">{emp}</div>}
+                    <div className="sig-ln">Firma del empleador</div>
+                    {emp && <div className="sig-sub">{emp}</div>}
                   </div>
                 </div>
 
-                {/* ── 7. Normativa ── */}
-                <div className="lq-norms">
-                  <div className="lq-norms-t">📜 Fundamento normativo</div>
+                {/* 7. Normativa */}
+                <div className="norms">
+                  <div className="norms-t">Fundamento normativo</div>
                   <strong>Cesantías:</strong> Art.249 CST · Ley 50/1990 — (Sal+Aux)×Días÷360 &nbsp;·&nbsp;
                   <strong>Intereses:</strong> Ley 52/1975 — Ces×Días×12%÷360 &nbsp;·&nbsp;
                   <strong>Prima:</strong> Art.306 CST — (Sal+Aux)×Días_sem÷360 · Pagos: jun.30 y dic.20 &nbsp;·&nbsp;
@@ -750,15 +799,15 @@ export default function App() {
                   <strong>Días:</strong> Año comercial 360, conteo inclusivo &nbsp;·&nbsp;
                   <strong>Aux. transporte:</strong> Ley 15/1959 — aplica si salario ≤ 2 SMLMV.
                 </div>
-                <div className="lq-warn">
-                  <strong>⚠ Aviso:</strong> Estimación informativa conforme a normatividad laboral colombiana vigente (sector privado). No aplica para servidores públicos, prestación de servicios, salario integral (Art.132 CST) ni régimen retroactivo de cesantías. Consulte un abogado laboralista.
+                <div className="warn">
+                  <strong>Aviso:</strong> Estimación informativa conforme a normatividad laboral colombiana vigente (sector privado). No aplica para servidores públicos, prestación de servicios, salario integral (Art.132 CST) ni régimen retroactivo de cesantías. Consulte un abogado laboralista.
                 </div>
 
               </div>
             </div>
 
-            <button className="lq-btn-back np" onClick={() => setShow(false)}>← Modificar datos</button>
-            <div className="lq-footer np">Calculadora de Liquidación Laboral · Colombia · CST 2026</div>
+            <button className="btn-b np" onClick={() => setShow(false)}>← Modificar datos</button>
+            <div className="footer np">Calculadora de Liquidación Laboral · Colombia · CST 2026</div>
           </div>
         ) : null}
       </main>
